@@ -13,7 +13,16 @@ public class Currency {
     @SerializedName("conversion_result")
     private double conversionResult;
 
-    public Currency() {
+    public String getBaseCode() {
+        return baseCode;
+    }
+
+    public String getTargetCode() {
+        return targetCode;
+    }
+
+    public double getConversionResult() {
+        return conversionResult;
     }
 
     public Currency(CurrencyDTO currencyDTO) {

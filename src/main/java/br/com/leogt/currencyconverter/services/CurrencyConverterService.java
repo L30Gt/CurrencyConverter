@@ -8,9 +8,11 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Scanner;
 
 public class CurrencyConverterService {
-    public void currencyApi(String originCurrency, String targetCurrency, double amount) {
+
+    public static Currency currencyApi(String originCurrency, String targetCurrency, double amount) {
         try {
             String address = "https://v6.exchangerate-api.com/v6/1d6e4812424daa6e3a1c9dec/pair/" + originCurrency + "/" + targetCurrency + "/" + amount;
 
@@ -23,10 +25,53 @@ public class CurrencyConverterService {
             Gson gson = new Gson();
             CurrencyDTO currencyDTO = gson.fromJson(response.body(), CurrencyDTO.class);
             Currency currency = new Currency(currencyDTO);
-            System.out.println(currency);
+            return new Currency(currencyDTO);
 
         } catch (Exception e) {
             throw new RuntimeException("Error in currency conversion");
         }
+    }
+
+    public static double getAmountFromUser() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Insert the amount you want to convert [Leave blank or 0 (zero) for 1 USD]: ");
+        String amountString = scanner.nextLine().replace(",", ".");
+        return Double.parseDouble(amountString.isEmpty() || amountString.equals(0) ? "1" : amountString);
+    }
+
+    public static void convertCurrency(String originCurrency, String targetCurrency, double amount) {
+        Currency currency = currencyApi(originCurrency, targetCurrency, amount);
+        System.out.printf("The amount of %.2f [%s] is equivalent to %.2f [%s].", amount, currency.getBaseCode(), currency.getConversionResult(), currency.getTargetCode());
+    }
+
+    public static void USDtoARS() {
+        double amount = getAmountFromUser();
+        convertCurrency("USD", "ARS", amount);
+    }
+
+    public static void ARStoUSD() {
+        double amount = getAmountFromUser();
+        convertCurrency("ARS", "USD", amount);
+    }
+
+    public static void USDtoBRL() {
+        double amount = getAmountFromUser();
+        convertCurrency("USD", "BRL", amount);
+    }
+
+    public static void BRLtoUSD() {
+        double amount = getAmountFromUser();
+        convertCurrency("BRL", "USD", amount);
+    }
+
+    public static void USDtoCOP() {
+        double amount = getAmountFromUser();
+        convertCurrency("USD", "COP", amount);
+    }
+
+    public static void COPtoUSD() {
+        double amount = getAmountFromUser();
+        convertCurrency("COP", "USD", amount);
     }
 }

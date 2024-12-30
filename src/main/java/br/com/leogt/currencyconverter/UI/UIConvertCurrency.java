@@ -1,5 +1,8 @@
 package br.com.leogt.currencyconverter.UI;
 
+import br.com.leogt.currencyconverter.services.CurrencyConverterService;
+
+import java.util.Currency;
 import java.util.Scanner;
 
 public class UIConvertCurrency {
@@ -8,6 +11,7 @@ public class UIConvertCurrency {
         Scanner scanner = new Scanner(System.in);
 
         do {
+            System.out.println();
             System.out.println("*".repeat(50));
             System.out.println("Welcome to the Currency Converter! =] ");
             System.out.println();
@@ -26,27 +30,27 @@ public class UIConvertCurrency {
 
             switch (option){
                 case 1:
-                    System.out.println("Dollar -> Argentine Peso");
+                    CurrencyConverterService.USDtoARS();
                     System.out.println();
                     break;
                 case 2:
-                    System.out.println("Argentine Peso -> Dollar");
+                    CurrencyConverterService.ARStoUSD();
                     System.out.println();
                     break;
                 case 3:
-                    System.out.println("Dollar -> Brazilian Real");
+                    CurrencyConverterService.USDtoBRL();
                     System.out.println();
                     break;
                 case 4:
-                    System.out.println("Brazilian Real -> Dollar");
+                    CurrencyConverterService.BRLtoUSD();
                     System.out.println();
                     break;
                 case 5:
-                    System.out.println("Dollar -> Colombian Peso");
+                    CurrencyConverterService.USDtoCOP();
                     System.out.println();
                     break;
                 case 6:
-                    System.out.println("Colombian Peso -> Dollar");
+                    CurrencyConverterService.COPtoUSD();
                     System.out.println();
                     break;
                 case 0:

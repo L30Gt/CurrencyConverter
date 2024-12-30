@@ -35,7 +35,7 @@ public class CurrencyConverterService {
     public static double getAmountFromUser() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Insert the amount you want to convert [Leave blank or 0 (zero) for 1 USD]: ");
+        System.out.print("Insert the amount you want to convert [Leave blank or 0 (zero) for 1.00]: ");
         String amountString = scanner.nextLine().replace(",", ".");
         return Double.parseDouble(amountString.isEmpty() || amountString.equals(0) ? "1" : amountString);
     }
@@ -73,5 +73,16 @@ public class CurrencyConverterService {
     public static void COPtoUSD() {
         double amount = getAmountFromUser();
         convertCurrency("COP", "USD", amount);
+    }
+
+    public static void otherCurrencies() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Insert the origin currency code: ");
+        String originCurrency = scanner.nextLine().toUpperCase();
+        System.out.print("Insert the target currency code: ");
+        String targetCurrency = scanner.nextLine().toUpperCase();
+
+        double amount = getAmountFromUser();
+        convertCurrency(originCurrency, targetCurrency, amount);
     }
 }

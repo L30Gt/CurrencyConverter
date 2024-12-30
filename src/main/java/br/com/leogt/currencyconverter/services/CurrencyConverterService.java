@@ -1,9 +1,11 @@
 package br.com.leogt.currencyconverter.services;
 
 import br.com.leogt.currencyconverter.DTO.CurrencyDTO;
+import br.com.leogt.currencyconverter.exceptions.InvalidCurrencyCodeException;
 import br.com.leogt.currencyconverter.models.Currency;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -24,24 +26,44 @@ public class CurrencyConverterService {
 
             Gson gson = new Gson();
             CurrencyDTO currencyDTO = gson.fromJson(response.body(), CurrencyDTO.class);
-            Currency currency = new Currency(currencyDTO);
+
+            if ("unsupported-code".equalsIgnoreCase(currencyDTO.errorType())) {
+                throw new InvalidCurrencyCodeException("Invalid currency code(s): " + originCurrency + " or " + targetCurrency);
+            }
+
             return new Currency(currencyDTO);
 
-        } catch (Exception e) {
-            throw new RuntimeException("Error in currency conversion");
+        } catch (IOException e) {
+            System.err.println("Error while connecting to the API");
+        } catch (InterruptedException e) {
+            System.err.println("The request was interrupted");
+        } catch (InvalidCurrencyCodeException e) {
+            System.err.println(e.getMessage());
         }
+        return null;
     }
 
     public static double getAmountFromUser() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Insert the amount you want to convert [Leave blank or 0 (zero) for 1.00]: ");
+        System.out.print("Insert the amount you want to convert [Leave blank for 1.00]: ");
         String amountString = scanner.nextLine().replace(",", ".");
-        return Double.parseDouble(amountString.isEmpty() || amountString.equals(0) ? "1" : amountString);
+        try {
+            return Double.parseDouble(amountString.isEmpty() ? "1" : amountString);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid format! Try again using only numbers.");
+            return getAmountFromUser();
+        }
     }
 
     public static void convertCurrency(String originCurrency, String targetCurrency, double amount) {
         Currency currency = currencyApi(originCurrency, targetCurrency, amount);
+
+        if (currency == null) {
+            System.err.println("Currency conversion failed due to invalid currency codes!");
+            return;
+        }
+
         System.out.printf("The amount of %.2f [%s] is equivalent to %.2f [%s].", amount, currency.getBaseCode(), currency.getConversionResult(), currency.getTargetCode());
     }
 

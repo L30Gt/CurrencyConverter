@@ -10,9 +10,12 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class CurrencyConverterService {
+    private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm");
 
     public static Currency currencyApi(String originCurrency, String targetCurrency, double amount) {
         try {
@@ -67,10 +70,13 @@ public class CurrencyConverterService {
         double convertedResult = currency.getConversionResult();
         String formatedResult;
 
+        LocalDateTime dateTime = LocalDateTime.now();
+        String formattedTime = dateTime.format(dateTimeFormatter);
+
         if (convertedResult < 0.01)
-            formatedResult = String.format("The amount of %.2f [%s] is equivalent to %.6f [%s]", amount, currency.getBaseCode(), convertedResult, currency.getTargetCode());
+            formatedResult = String.format("The amount of %.2f [%s] is equivalent to %.6f [%s] at %s", amount, currency.getBaseCode(), convertedResult, currency.getTargetCode(), formattedTime);
         else
-            formatedResult = String.format("The amount of %.2f [%s] is equivalent to %.2f [%s]", amount, currency.getBaseCode(), convertedResult, currency.getTargetCode());
+            formatedResult = String.format("The amount of %.2f [%s] is equivalent to %.2f [%s] at %s", amount, currency.getBaseCode(), convertedResult, currency.getTargetCode(), formattedTime);
 
         System.out.println(formatedResult);
     }

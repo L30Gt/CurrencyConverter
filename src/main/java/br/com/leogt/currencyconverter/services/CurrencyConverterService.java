@@ -1,6 +1,7 @@
 package br.com.leogt.currencyconverter.services;
 
 import br.com.leogt.currencyconverter.DTO.CurrencyDTO;
+import br.com.leogt.currencyconverter.UI.UIMenu;
 import br.com.leogt.currencyconverter.exceptions.InvalidCurrencyCodeException;
 import br.com.leogt.currencyconverter.models.Currency;
 import com.google.gson.Gson;
@@ -12,10 +13,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class CurrencyConverterService {
+    private static final List<String> historyList = new ArrayList<>();
     private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm");
+    static Scanner scanner = new Scanner(System.in);
+
 
     public static Currency currencyApi(String originCurrency, String targetCurrency, double amount) {
         try {
@@ -30,7 +36,8 @@ public class CurrencyConverterService {
             Gson gson = new Gson();
             CurrencyDTO currencyDTO = gson.fromJson(response.body(), CurrencyDTO.class);
 
-            if ("unsupported-code".equalsIgnoreCase(currencyDTO.errorType())) {
+            if ("unsupported-code".equalsIgnoreCase(currencyDTO.errorType()) ||
+                    "malformed-request".equalsIgnoreCase(currencyDTO.errorType())) {
                 throw new InvalidCurrencyCodeException("Invalid currency code(s): " + originCurrency + " or " + targetCurrency);
             }
 
@@ -40,14 +47,11 @@ public class CurrencyConverterService {
             System.err.println("Error while connecting to the API");
         } catch (InterruptedException e) {
             System.err.println("The request was interrupted");
-        } catch (InvalidCurrencyCodeException e) {
-            System.err.println(e.getMessage());
         }
         return null;
     }
 
     public static double getAmountFromUser() {
-        Scanner scanner = new Scanner(System.in);
 
         System.out.print("Insert the amount you want to convert [Leave blank for 1.00]: ");
         String amountString = scanner.nextLine().replace(",", ".");
@@ -78,7 +82,9 @@ public class CurrencyConverterService {
         else
             formatedResult = String.format("The amount of %.2f [%s] is equivalent to %.2f [%s] at %s", amount, currency.getBaseCode(), convertedResult, currency.getTargetCode(), formattedTime);
 
+        System.out.println();
         System.out.println(formatedResult);
+        historyList.add(formatedResult);
     }
 
     public static void USDtoARS() {
@@ -112,13 +118,36 @@ public class CurrencyConverterService {
     }
 
     public static void otherCurrencies() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Insert the origin currency code: ");
-        String originCurrency = scanner.nextLine().toUpperCase();
-        System.out.print("Insert the target currency code: ");
-        String targetCurrency = scanner.nextLine().toUpperCase();
+        try {
+            System.out.print("Insert the origin currency code: ");
+            String originCurrency = scanner.nextLine().toUpperCase();
+            System.out.print("Insert the target currency code: ");
+            String targetCurrency = scanner.nextLine().toUpperCase();
 
-        double amount = getAmountFromUser();
-        convertCurrency(originCurrency, targetCurrency, amount);
+            double amount = getAmountFromUser();
+            convertCurrency(originCurrency, targetCurrency, amount);
+        } catch (InvalidCurrencyCodeException e) {
+            System.err.println(e.getMessage());
+            System.out.println();
+            UIMenu.pressEnter(scanner);
+        }
+
+    }
+
+    public static void showHistory() {
+        System.out.println("""
+                ********************************************************************************
+                
+                ------------------------------ CONVERSION HISTORY ------------------------------
+                """);
+
+        if(historyList.isEmpty()) {
+            System.out.println("No conversion history found.");
+        }
+
+        for (String history : historyList) {
+            System.out.printf("%s\n", history);
+        }
+        System.out.println("\n--------------------------------------------------------------------------------\n");
     }
 }

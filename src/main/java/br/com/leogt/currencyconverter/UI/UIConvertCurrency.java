@@ -10,12 +10,9 @@ public class UIConvertCurrency {
         Scanner scanner = new Scanner(System.in);
 
         do {
-            System.out.println();
-            System.out.println("*".repeat(50));
-            System.out.println("Welcome to the Currency Converter! =] ");
-            System.out.println();
-
+            System.out.println("*".repeat(80));
             System.out.println("""
+                
                 1) Dollar -> Argentine Peso
                 2) Argentine Peso -> Dollar
                 3) Dollar -> Brazilian Real
@@ -23,12 +20,14 @@ public class UIConvertCurrency {
                 5) Dollar -> Colombian Peso
                 6) Colombian Peso -> Dollar
                 7) Custom Currency Conversion
-                0) Exit
+                0) Back to main menu
                 """);
+            System.out.println("*".repeat(80));
             System.out.print("Select the option: ");
 
             try {
                 option = scanner.nextInt();
+                scanner.nextLine();
 
                 switch (option) {
                     case 1:
@@ -61,12 +60,17 @@ public class UIConvertCurrency {
                         CurrencyConverterService.otherCurrencies();
                         break;
                     case 0:
-                        exitMessage();
+                        UIMenu.startMenu();
                         break;
                     default:
                         System.out.println("Invalid option! Try again.");
                         break;
                 }
+
+                if (option != 0) {
+                    UIMenu.pressEnter(scanner);
+                }
+
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input! Please enter a number.");
                 scanner.nextLine();
@@ -75,24 +79,11 @@ public class UIConvertCurrency {
         } while (option != 0);
     }
 
-    public static void exitMessage() {
-        System.out.println("""
-                **************************************************************************
-                
-                --------------------------------------------------------------------------
-                
-                                     ORACLE NEXT EDUCATION CHALLENGE
-                                            MADE BY L30Gt - 2024
-                                 THANKS FOR USING THE CURRENCY CONVERTER
-                
-                --------------------------------------------------------------------------
-                """);
-    }
-
     public static void moreCurrencies() {
-        System.out.println("************************************ ");
-        System.out.println("75 currencies available for conversion: ");
-        System.out.println("************************************ \n");
+        System.out.println("*".repeat(80));
+        System.out.println("\n\t\t\t\t\t75 currencies available for conversion\n");
+        System.out.println("*".repeat(80));
+        System.out.println();
 
         Map<String, String> currencies = new TreeMap<>();
         currencies.put("AED", "UAE Dirham");

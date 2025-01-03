@@ -2,10 +2,7 @@ package br.com.leogt.currencyconverter.UI;
 
 import br.com.leogt.currencyconverter.services.CurrencyConverterService;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.TreeMap;
+import java.util.*;
 
 public class UIConvertCurrency {
     public static void displayMenu() {
@@ -29,47 +26,53 @@ public class UIConvertCurrency {
                 0) Exit
                 """);
             System.out.print("Select the option: ");
-            option = scanner.nextInt();
 
-            switch (option){
-                case 1:
-                    CurrencyConverterService.USDtoARS();
-                    System.out.println();
-                    break;
-                case 2:
-                    CurrencyConverterService.ARStoUSD();
-                    System.out.println();
-                    break;
-                case 3:
-                    CurrencyConverterService.USDtoBRL();
-                    System.out.println();
-                    break;
-                case 4:
-                    CurrencyConverterService.BRLtoUSD();
-                    System.out.println();
-                    break;
-                case 5:
-                    CurrencyConverterService.USDtoCOP();
-                    System.out.println();
-                    break;
-                case 6:
-                    CurrencyConverterService.COPtoUSD();
-                    System.out.println();
-                    break;
-                case 7:
-                    moreCurrencies();
-                    System.out.println();
-                    CurrencyConverterService.otherCurrencies();
-                    break;
-                case 0:
-                    exitMessage();
-                    break;
-                default:
-                    System.out.println("Invalid option! Try again.");
-                    break;
+            try {
+                option = scanner.nextInt();
+
+                switch (option) {
+                    case 1:
+                        CurrencyConverterService.USDtoARS();
+                        System.out.println();
+                        break;
+                    case 2:
+                        CurrencyConverterService.ARStoUSD();
+                        System.out.println();
+                        break;
+                    case 3:
+                        CurrencyConverterService.USDtoBRL();
+                        System.out.println();
+                        break;
+                    case 4:
+                        CurrencyConverterService.BRLtoUSD();
+                        System.out.println();
+                        break;
+                    case 5:
+                        CurrencyConverterService.USDtoCOP();
+                        System.out.println();
+                        break;
+                    case 6:
+                        CurrencyConverterService.COPtoUSD();
+                        System.out.println();
+                        break;
+                    case 7:
+                        moreCurrencies();
+                        System.out.println();
+                        CurrencyConverterService.otherCurrencies();
+                        break;
+                    case 0:
+                        exitMessage();
+                        break;
+                    default:
+                        System.out.println("Invalid option! Try again.");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input! Please enter a number.");
+                scanner.nextLine();
+                option = -1;
             }
         } while (option != 0);
-
     }
 
     public static void exitMessage() {
@@ -169,7 +172,6 @@ public class UIConvertCurrency {
         currencies.put("VND", "Vietnamese Đồng");
         currencies.put("ZAR", "South African Rand");
         int count = 0;
-        Scanner scanner = new Scanner(System.in);
 
         for (String code : currencies.keySet()) {
             System.out.printf("%-5s: %-40s", code, currencies.get(code));

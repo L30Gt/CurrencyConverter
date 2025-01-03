@@ -64,7 +64,15 @@ public class CurrencyConverterService {
             return;
         }
 
-        System.out.printf("The amount of %.2f [%s] is equivalent to %.2f [%s].", amount, currency.getBaseCode(), currency.getConversionResult(), currency.getTargetCode());
+        double convertedResult = currency.getConversionResult();
+        String formatedResult;
+
+        if (convertedResult < 0.01)
+            formatedResult = String.format("The amount of %.2f [%s] is equivalent to %.6f [%s]", amount, currency.getBaseCode(), convertedResult, currency.getTargetCode());
+        else
+            formatedResult = String.format("The amount of %.2f [%s] is equivalent to %.2f [%s]", amount, currency.getBaseCode(), convertedResult, currency.getTargetCode());
+
+        System.out.println(formatedResult);
     }
 
     public static void USDtoARS() {

@@ -37,7 +37,13 @@ It involves creating a currency converter in Java that allows users to convert b
 
 ## ToDo
 
-- [ ] Conversion History
-- [ ] Log Registry
+- [X] ~~Conversion History~~
+- [X] ~~Log Registry~~
 - [ ] Connection with another API to convert Cryptocurrencies
-- [ ] UI tweaks
+- [X] ~~UI tweaks~~
+
+## Badge
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/07252a18-6df2-4390-86da-219bcdf3783d" alt="Badge-Conversor" width="150">
+</div>
